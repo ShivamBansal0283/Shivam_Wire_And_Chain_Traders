@@ -1,5 +1,4 @@
-
-import { Factory, Wrench, Cable, Coil } from "lucide-react";
+import { Factory, Wrench, Cable } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const industries = [
@@ -24,7 +23,7 @@ const industries = [
   {
     name: "Rope Manufacturers",
     description: "Strong core wire for rope and cable manufacturing applications",
-    icon: Coil,
+    icon: Cable,
     link: "/industries"
   }
 ];
