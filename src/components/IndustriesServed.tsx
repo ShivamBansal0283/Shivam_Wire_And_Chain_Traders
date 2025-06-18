@@ -1,44 +1,37 @@
 
-import { industry } from "lucide-react";
+import { Factory, Wrench, Cable, Rope } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const industries = [
   {
     name: "Mattress & Spring Manufacturers",
-    description: "High-quality wire for mattress springs and support systems",
-    icon: "🛏️",
-    wireSizes: "0.8mm - 1.5mm",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200"
+    description: "High-quality wire for spring systems and bedding applications",
+    icon: Factory,
+    link: "/industries"
   },
   {
-    name: "Wire Brush Makers",
-    description: "Precision wire for industrial and household brush applications",
-    icon: "🧹",
-    wireSizes: "0.6mm - 1.0mm",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200"
+    name: "Wire Brush Industries",
+    description: "Durable wire solutions for industrial and household brush manufacturing",
+    icon: Wrench,
+    link: "/industries"
   },
   {
     name: "Cable Armouring Units",
-    description: "Durable wire for cable protection and reinforcement",
-    icon: "🔌",
-    wireSizes: "1.0mm - 2.0mm",
-    bgColor: "bg-yellow-50",
-    borderColor: "border-yellow-200"
+    description: "Reliable wire for cable protection and electrical applications",
+    icon: Cable,
+    link: "/industries"
   },
   {
     name: "Rope Manufacturers",
-    description: "Strong core wire for rope and cable manufacturing",
-    icon: "🪢",
-    wireSizes: "1.2mm - 2.0mm",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-200"
+    description: "Strong core wire for rope and cable manufacturing applications",
+    icon: Rope,
+    link: "/industries"
   }
 ];
 
 export const IndustriesServed = () => {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
@@ -50,34 +43,41 @@ export const IndustriesServed = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {industries.map((industry, index) => (
-            <div
-              key={industry.name}
-              className={`${industry.bgColor} ${industry.borderColor} border-2 rounded-xl p-8 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1`}
-            >
-              <div className="flex items-start space-x-4">
-                <div className="text-4xl mb-4">{industry.icon}</div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-slate-800 mb-3">
-                    {industry.name}
-                  </h3>
-                  <p className="text-slate-600 mb-4 leading-relaxed">
-                    {industry.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-sm text-slate-500 font-medium">Recommended Sizes:</span>
-                      <div className="text-yellow-600 font-semibold">{industry.wireSizes}</div>
-                    </div>
-                    <button className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors text-sm">
-                      Learn More
-                    </button>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {industries.map((industry, index) => {
+            const IconComponent = industry.icon;
+            return (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center"
+              >
+                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <IconComponent className="w-8 h-8 text-yellow-600" />
                 </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-3">
+                  {industry.name}
+                </h3>
+                <p className="text-slate-600 mb-4">
+                  {industry.description}
+                </p>
+                <Link
+                  to={industry.link}
+                  className="text-yellow-600 hover:text-yellow-700 font-semibold"
+                >
+                  Learn More →
+                </Link>
               </div>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link
+            to="/industries"
+            className="bg-slate-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors"
+          >
+            View All Industries
+          </Link>
         </div>
       </div>
     </section>
