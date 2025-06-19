@@ -1,7 +1,34 @@
 
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { useState, useEffect } from "react";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
+import { WhatsAppButton } from "../components/WhatsAppButton";
+
+const CountingNumber = ({ target, suffix = "" }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const duration = 2000; // 2 seconds
+    const steps = 60;
+    const increment = target / steps;
+    const stepDuration = duration / steps;
+
+    let currentStep = 0;
+    const timer = setInterval(() => {
+      currentStep++;
+      if (currentStep <= steps) {
+        setCount(Math.floor(increment * currentStep));
+      } else {
+        setCount(target);
+        clearInterval(timer);
+      }
+    }, stepDuration);
+
+    return () => clearInterval(timer);
+  }, [target]);
+
+  return <span>{count}{suffix}</span>;
+};
 
 const About = () => {
   return (
@@ -109,19 +136,27 @@ const About = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">40+</div>
+              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">
+                <CountingNumber target={40} suffix="+" />
+              </div>
               <p className="text-slate-600">Years of Experience</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">500+</div>
+              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">
+                <CountingNumber target={500} suffix="+" />
+              </div>
               <p className="text-slate-600">Satisfied Clients</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">15+</div>
+              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">
+                <CountingNumber target={15} suffix="+" />
+              </div>
               <p className="text-slate-600">States Served</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">99%</div>
+              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">
+                <CountingNumber target={99} suffix="%" />
+              </div>
               <p className="text-slate-600">Quality Success Rate</p>
             </div>
           </div>
