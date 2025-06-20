@@ -10,28 +10,72 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     company: "",
-    mobile: "",
+    phone: "",
     city: "",
     wireSize: "",
     quantity: "",
     message: ""
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent Successfully!",
-      description: "Thank you for your inquiry. Our team will contact you within 24 hours with a detailed quote.",
-    });
-    setFormData({
-      name: "",
-      company: "",
-      mobile: "",
-      city: "",
-      wireSize: "",
-      quantity: "",
-      message: ""
-    });
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://fhgxutirfgwqkbcjnlpw.supabase.co/functions/v1/submit-inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          wireSize: formData.wireSize
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast({
+          title: "Message Sent Successfully!",
+          description: result.message,
+        });
+        setFormData({
+          name: "",
+          company: "",
+          phone: "",
+          city: "",
+          wireSize: "",
+          quantity: "",
+          message: ""
+        });
+      } else {
+        const errorMessage = result.details 
+          ? Array.isArray(result.details) 
+            ? result.details.join(', ')
+            : result.details
+          : result.error || 'Failed to send message';
+          
+        toast({
+          title: "Submission Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      toast({
+        title: "Network Error",
+        description: "Please check your connection and try again, or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -139,6 +183,7 @@ const Contact = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="Enter your full name"
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -154,6 +199,7 @@ const Contact = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="Your company name"
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -163,12 +209,13 @@ const Contact = () => {
                     </label>
                     <input
                       type="tel"
-                      name="mobile"
+                      name="phone"
                       required
-                      value={formData.mobile}
+                      value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="+91 XXXXXXXXXX"
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -184,6 +231,7 @@ const Contact = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="Your city"
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -197,6 +245,7 @@ const Contact = () => {
                       value={formData.wireSize}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      disabled={isSubmitting}
                     >
                       <option value="">Select wire size</option>
                       <option value="0.6mm">0.6mm</option>
@@ -222,6 +271,7 @@ const Contact = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="e.g., 500 kg, 10 tons, 100 coils"
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -237,14 +287,16 @@ const Contact = () => {
                     rows={5}
                     className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                     placeholder="Please specify any additional requirements, delivery timeline, or questions you may have..."
+                    disabled={isSubmitting}
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-yellow-400 text-slate-800 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105"
+                  disabled={isSubmitting}
+                  className="w-full bg-yellow-400 text-slate-800 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  Submit Inquiry
+                  {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                 </button>
               </form>
             </div>

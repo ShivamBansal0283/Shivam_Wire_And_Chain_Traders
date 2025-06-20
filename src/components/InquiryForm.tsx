@@ -13,22 +13,63 @@ export const InquiryForm = () => {
     city: "",
     message: ""
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Inquiry Received!",
-      description: "We'll get back to you within 24 hours with a detailed quote.",
-    });
-    setFormData({
-      name: "",
-      company: "",
-      phone: "",
-      wireSize: "",
-      quantity: "",
-      city: "",
-      message: ""
-    });
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://fhgxutirfgwqkbcjnlpw.supabase.co/functions/v1/submit-inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast({
+          title: "Inquiry Submitted Successfully!",
+          description: result.message,
+        });
+        setFormData({
+          name: "",
+          company: "",
+          phone: "",
+          wireSize: "",
+          quantity: "",
+          city: "",
+          message: ""
+        });
+      } else {
+        const errorMessage = result.details 
+          ? Array.isArray(result.details) 
+            ? result.details.join(', ')
+            : result.details
+          : result.error || 'Failed to submit inquiry';
+          
+        toast({
+          title: "Submission Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      toast({
+        title: "Network Error",
+        description: "Please check your connection and try again, or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -66,6 +107,7 @@ export const InquiryForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   placeholder="Enter your full name"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -81,6 +123,7 @@ export const InquiryForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   placeholder="Your company name"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -96,6 +139,7 @@ export const InquiryForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   placeholder="+91 XXXXXXXXXX"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -109,6 +153,7 @@ export const InquiryForm = () => {
                   value={formData.wireSize}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  disabled={isSubmitting}
                 >
                   <option value="">Select wire size</option>
                   <option value="0.6mm">0.6mm</option>
@@ -133,6 +178,7 @@ export const InquiryForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   placeholder="e.g., 500 kg, 10 tons"
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -148,6 +194,7 @@ export const InquiryForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   placeholder="Your city"
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
@@ -163,15 +210,17 @@ export const InquiryForm = () => {
                 rows={4}
                 className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                 placeholder="Any specific requirements or questions..."
+                disabled={isSubmitting}
               />
             </div>
 
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-yellow-400 text-slate-800 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105"
+                disabled={isSubmitting}
+                className="bg-yellow-400 text-slate-800 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                Submit Inquiry
+                {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
               </button>
             </div>
           </form>
