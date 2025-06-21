@@ -19,12 +19,11 @@ const app = express();
 // ✅ Step: CORS Configuration
 const allowedOrigins = [
   'http://localhost:8080',      // main site (dev)
-  "http://localhost:55245",
-  'http://localhost:5173',      // dashboard (dev)
-  'https://shivamwire.com',     // main site (prod)
-  'https://admin.shivamwire.com', // dashboard (prod)
-  "http://localhost:55650",
-  "http://localhost:59957"
+  "https://shivam-wire-and-chain-traders.vercel.app",  //deployed website(main)
+  "https://shivam-wire-and-chain-traders-leads.vercel.app",  // deployed website(leads dashboard)
+  "http://localhost:57149",
+  'http://localhost:5173'      // dashboard (dev)
+  
 ];
 
 app.use(cors({
