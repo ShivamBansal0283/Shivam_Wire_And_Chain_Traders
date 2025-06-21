@@ -19,9 +19,12 @@ const app = express();
 // ✅ Step: CORS Configuration
 const allowedOrigins = [
   'http://localhost:8080',      // main site (dev)
+  "http://localhost:55245",
   'http://localhost:5173',      // dashboard (dev)
   'https://shivamwire.com',     // main site (prod)
-  'https://admin.shivamwire.com' // dashboard (prod)
+  'https://admin.shivamwire.com', // dashboard (prod)
+  "http://localhost:55650",
+  "http://localhost:59957"
 ];
 
 app.use(cors({
@@ -34,6 +37,8 @@ app.use(cors({
   },
   credentials: true
 }));
+
+
 
 app.use(express.json());
 

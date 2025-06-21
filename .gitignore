@@ -19,7 +19,7 @@ logs
 
 # dotenv
 .env
-.env.production
+**/.env.production
 .env.*.local
 
 # OS
