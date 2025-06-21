@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model Inquiry {
+//   id        String   @id @default(cuid())
+//   name      String
+//   company   String
+//   phone     String
+//   wireSize  String
+//   quantity  String
+//   city      String
+//   message   String?
+//   createdAt DateTime @default(now())
+// }
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String
+  company     String
+  phone       String
+  wireSize    String
+  quantity    String
+  city        String
+  message     String?
+  createdAt   DateTime @default(now())
+  attended    Boolean  @default(false)
+  attendedAt  DateTime?
+}
+model User {
+  id       String  @id @default(cuid())
+  email    String  @unique
+  password String
+  role     String  @default("admin")
+  createdAt DateTime @default(now())
+}
