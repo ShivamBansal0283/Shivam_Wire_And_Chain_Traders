@@ -40,5 +40,3 @@ coverage/
 # Others
 *.local
 
-# Local configuration file
-config.js
