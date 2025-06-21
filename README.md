@@ -1,4 +1,4 @@
-# Shivam Wire Traders – Monorepo
+# Shivam Wire Traders
 
 This repository contains the complete web platform for **Shivam Wire Traders**, a leading manufacturer and supplier of mild steel HB wire. The monorepo includes:
 
